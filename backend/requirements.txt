@@ -1,75 +1,27 @@
 # FastAPI e dependências principais
-fastapi[all]==0.104.1
+fastapi==0.104.1
 uvicorn[standard]==0.24.0
-python-multipart==0.0.6
-
-# Banco de dados
-sqlalchemy[asyncio]==2.0.23
-alembic==1.12.1
-asyncpg==0.29.0
-
-# Redis e Cache
-redis==5.0.1
-aioredis==2.0.1
-
-# Celery e RabbitMQ
-celery==5.3.4
-kombu==5.3.4
-
-# Autenticação e Segurança
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-email-validator==2.1.0
-
-# WebSockets
-websockets==12.0
-
-# Manipulação de arquivos
-aiofiles==23.2.1
-Pillow==10.1.0
-
-# Busca e indexação
-elasticsearch==8.11.0
-whoosh==2.7.4
-
-# Exportação PDF e Excel
-reportlab==4.0.7
-openpyxl==3.1.2
-xlsxwriter==3.1.9
-
-# Email
-aiosmtplib==3.0.1
-
-# Validação
 pydantic==2.5.0
 pydantic-settings==2.1.0
 
+# Banco de dados
+sqlalchemy==2.0.23
+asyncpg==0.29.0
+alembic==1.13.1
+
+# Cache e sessões
+redis==5.0.1
+celery==5.3.4
+
+# Autenticação
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
 # Utilitários
-python-dateutil==2.8.2
-pytz==2023.3
+python-dotenv==1.0.0
 httpx==0.25.2
 
 # Testes
 pytest==7.4.3
 pytest-asyncio==0.21.1
-pytest-cov==4.1.0
-
-# Desenvolvimento
-black==23.11.0
-isort==5.12.0
-flake8==6.1.0
-mypy==1.7.1
-
-# Monitoramento e logging
-structlog==23.2.0
-prometheus-client==0.19.0
-
-# GraphQL (API alternativa)
-strawberry-graphql==0.213.0
-
-# Transformação Operacional
-ot==0.0.1
-
-# Internacionalização
-babel==2.13.1
-python-i18n==0.3.9
