@@ -1,0 +1,75 @@
+# Frontend
+frontend:
+  - frontend/**/*
+  - 'frontend/**/*.{js,jsx,ts,tsx,css,scss,html}'
+
+# Backend
+backend:
+  - backend/**/*
+  - 'backend/**/*.{py,pyx,pyi}'
+
+# Documentation
+documentation:
+  - '**/*.md'
+  - '**/*.rst'
+  - '**/*.txt'
+  - docs/**/*
+  - .github/**/*
+
+# Tests
+tests:
+  - '**/*.test.{js,jsx,ts,tsx}'
+  - '**/*.spec.{js,jsx,ts,tsx}'
+  - '**/test_*.py'
+  - '**/*_test.py'
+  - '**/tests/**/*'
+
+# Configuration
+configuration:
+  - '**/*.yml'
+  - '**/*.yaml'
+  - '**/*.json'
+  - '**/*.toml'
+  - '**/*.ini'
+  - '**/*.cfg'
+  - '**/*.conf'
+
+# Dependencies
+dependencies:
+  - '**/package.json'
+  - '**/requirements.txt'
+  - '**/Pipfile'
+  - '**/poetry.lock'
+  - '**/yarn.lock'
+  - '**/package-lock.json'
+
+# Security
+security:
+  - '**/security/**/*'
+  - '**/*security*'
+  - '**/auth/**/*'
+  - '**/*auth*'
+
+# Performance
+performance:
+  - '**/*performance*'
+  - '**/*optimization*'
+  - '**/*cache*'
+
+# Bug fixes
+bug:
+  - '**/*bug*'
+  - '**/*fix*'
+  - '**/*issue*'
+
+# Features
+feature:
+  - '**/*feature*'
+  - '**/*enhancement*'
+  - '**/*improvement*'
+
+# Breaking changes
+breaking:
+  - '**/*breaking*'
+  - '**/*major*'
+  - '**/*deprecate*'

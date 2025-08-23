@@ -1,0 +1,113 @@
+name: "Pull Request Auto Milestone"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-milestone:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          // Get available milestones
+          const { data: milestones } = await github.rest.issues.listMilestones({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+          });
+          
+          if (milestones.length === 0) {
+            console.log('No open milestones found');
+            return;
+          }
+          
+          // Find the most appropriate milestone based on PR title and labels
+          const prTitle = pull.title.toLowerCase();
+          const prBody = (pull.body || '').toLowerCase();
+          
+          let bestMilestone = null;
+          let bestScore = 0;
+          
+          for (const milestone of milestones) {
+            let score = 0;
+            const milestoneTitle = milestone.title.toLowerCase();
+            const milestoneDescription = (milestone.description || '').toLowerCase();
+            
+            // Check if PR title contains milestone keywords
+            if (milestoneTitle.includes('bug') && (prTitle.includes('bug') || prTitle.includes('fix'))) {
+              score += 3;
+            }
+            
+            if (milestoneTitle.includes('feature') && (prTitle.includes('feature') || prTitle.includes('add'))) {
+              score += 3;
+            }
+            
+            if (milestoneTitle.includes('documentation') && (prTitle.includes('doc') || prTitle.includes('readme'))) {
+              score += 3;
+            }
+            
+            if (milestoneTitle.includes('performance') && (prTitle.includes('performance') || prTitle.includes('optimization'))) {
+              score += 3;
+            }
+            
+            if (milestoneTitle.includes('security') && (prTitle.includes('security') || prTitle.includes('auth'))) {
+              score += 3;
+            }
+            
+            if (milestoneTitle.includes('ui') && (prTitle.includes('ui') || prTitle.includes('ux') || prTitle.includes('interface'))) {
+              score += 2;
+            }
+            
+            if (milestoneTitle.includes('mobile') && (prTitle.includes('mobile') || prTitle.includes('app'))) {
+              score += 2;
+            }
+            
+            // Check if PR body contains milestone keywords
+            if (milestoneDescription.includes('bug') && prBody.includes('bug')) {
+              score += 2;
+            }
+            
+            if (milestoneDescription.includes('feature') && prBody.includes('feature')) {
+              score += 2;
+            }
+            
+            if (milestoneDescription.includes('documentation') && prBody.includes('documentation')) {
+              score += 2;
+            }
+            
+            // Prefer milestones with due dates
+            if (milestone.due_on) {
+              score += 1;
+            }
+            
+            if (score > bestScore) {
+              bestScore = score;
+              bestMilestone = milestone;
+            }
+          }
+          
+          // Only assign milestone if we have a good match
+          if (bestMilestone && bestScore >= 2) {
+            try {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                milestone: bestMilestone.number,
+              });
+              
+              console.log(`Milestone "${bestMilestone.title}" assigned with score ${bestScore}`);
+            } catch (error) {
+              console.log('Failed to assign milestone:', error.message);
+            }
+          } else {
+            console.log('No suitable milestone found for this PR');
+          }

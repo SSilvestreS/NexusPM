@@ -1,0 +1,151 @@
+name: "Pull Request Auto Comment"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-comment:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          let comments = [];
+          
+          // Welcome message for new contributors
+          if (pull.user.login !== 'SSilvestreS') {
+            comments.push(`👋 **Welcome, @${pull.user.login}!** 
+
+Thank you for contributing to NexusPM! 🚀
+
+Here are some things to help you get started:
+
+- 📖 Check out our [Contributing Guide](https://github.com/SSilvestreS/NexusPM/blob/master/CONTRIBUTORS.md)
+- 🧪 Make sure all tests pass
+- 📝 Update documentation if needed
+- 🔍 Review your changes carefully
+
+We appreciate your contribution! 🙏`);
+          }
+          
+          // Check for common issues
+          const hasEnvFile = files.some(file => file.filename.includes('.env'));
+          if (hasEnvFile) {
+            comments.push(`⚠️ **Environment File Detected**
+
+I noticed you're including a \`.env\` file in your PR. Please ensure that:
+
+- No sensitive information (API keys, passwords, etc.) is included
+- Consider using \`.env.example\` instead
+- Update the documentation if environment variables are added
+
+Thanks for being security-conscious! 🔒`);
+          }
+          
+          const hasLargeFiles = files.some(file => file.changes > 1000);
+          if (hasLargeFiles) {
+            comments.push(`📏 **Large File Changes Detected**
+
+Some files in this PR have significant changes. Please ensure:
+
+- All changes are necessary and focused
+- Consider breaking large changes into smaller PRs
+- Thorough testing has been performed
+
+Thanks for your attention to detail! 🎯`);
+          }
+          
+          const hasTestChanges = files.some(file => 
+            file.filename.includes('test') || 
+            file.filename.includes('spec') ||
+            file.filename.startsWith('tests/')
+          );
+          
+          const isDocOnly = files.every(file => 
+            file.filename.endsWith('.md') || 
+            file.filename.startsWith('docs/') ||
+            file.filename.startsWith('.github/') ||
+            file.filename === 'README.md' ||
+            file.filename === 'CONTRIBUTORS.md' ||
+            file.filename === 'LICENSE'
+          );
+          
+          if (!hasTestChanges && !isDocOnly) {
+            comments.push(`🧪 **Testing Reminder**
+
+Consider adding tests for new functionality or changes. This helps ensure:
+
+- Code quality and reliability
+- Easier maintenance
+- Better documentation of expected behavior
+
+Thanks for thinking about testing! 🧪`);
+          }
+          
+          const hasSecurityChanges = files.some(file => 
+            file.filename.includes('security') ||
+            file.filename.includes('auth') ||
+            file.filename.startsWith('backend/app/core/security')
+          );
+          
+          if (hasSecurityChanges) {
+            comments.push(`🔒 **Security Changes Detected**
+
+This PR contains security-related changes. Please ensure:
+
+- All changes follow security best practices
+- No hardcoded secrets or credentials
+- Proper input validation and sanitization
+- Security implications are documented
+
+Thanks for prioritizing security! 🔒`);
+          }
+          
+          const hasPerformanceChanges = files.some(file => 
+            file.filename.includes('performance') ||
+            file.filename.includes('optimization') ||
+            file.filename.includes('cache')
+          );
+          
+          if (hasPerformanceChanges) {
+            comments.push(`⚡ **Performance Changes Detected**
+
+This PR contains performance-related changes. Please ensure:
+
+- Performance improvements are measurable
+- No performance regressions are introduced
+- Changes are properly benchmarked
+- Performance implications are documented
+
+Thanks for optimizing performance! ⚡`);
+          }
+          
+          // Post comments
+          for (const comment of comments) {
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment,
+              });
+              
+              // Add delay between comments to avoid rate limiting
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (error) {
+              console.log('Failed to post comment:', error.message);
+            }
+          }

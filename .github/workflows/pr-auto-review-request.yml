@@ -1,0 +1,82 @@
+name: "Pull Request Auto Review Request"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-review-request:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          // Don't request review from the PR author
+          if (pull.user.login === 'SSilvestreS') {
+            return;
+          }
+          
+          // Request review from maintainers based on file changes
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          let reviewers = [];
+          
+          // Frontend changes
+          const hasFrontendChanges = files.some(file => file.filename.startsWith('frontend/'));
+          if (hasFrontendChanges) {
+            reviewers.push('SSilvestreS');
+          }
+          
+          // Backend changes
+          const hasBackendChanges = files.some(file => file.filename.startsWith('backend/'));
+          if (hasBackendChanges) {
+            reviewers.push('SSilvestreS');
+          }
+          
+          // Documentation changes
+          const hasDocChanges = files.some(file => 
+            file.filename.endsWith('.md') || 
+            file.filename.startsWith('docs/') ||
+            file.filename.startsWith('.github/')
+          );
+          if (hasDocChanges) {
+            reviewers.push('SSilvestreS');
+          }
+          
+          // Security changes
+          const hasSecurityChanges = files.some(file => 
+            file.filename.includes('security') ||
+            file.filename.includes('auth') ||
+            file.filename.startsWith('backend/app/core/security')
+          );
+          if (hasSecurityChanges) {
+            reviewers.push('SSilvestreS');
+          }
+          
+          // Remove duplicates
+          reviewers = [...new Set(reviewers)];
+          
+          if (reviewers.length > 0) {
+            try {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                reviewers: reviewers,
+              });
+              
+              console.log(`Review requested from: ${reviewers.join(', ')}`);
+            } catch (error) {
+              console.log('Failed to request review:', error.message);
+            }
+          }

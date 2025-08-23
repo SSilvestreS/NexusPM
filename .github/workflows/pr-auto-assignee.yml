@@ -1,0 +1,129 @@
+name: "Pull Request Auto Assignee"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-assignee:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          // Don't assign to the PR author
+          if (pull.user.login === 'SSilvestreS') {
+            return;
+          }
+          
+          // Get file changes to determine appropriate assignees
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          let assignees = [];
+          
+          // Frontend changes
+          const hasFrontendChanges = files.some(file => file.filename.startsWith('frontend/'));
+          if (hasFrontendChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Backend changes
+          const hasBackendChanges = files.some(file => file.filename.startsWith('backend/'));
+          if (hasBackendChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Documentation changes
+          const hasDocChanges = files.some(file => 
+            file.filename.endsWith('.md') || 
+            file.filename.startsWith('docs/') ||
+            file.filename.startsWith('.github/')
+          );
+          if (hasDocChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Security changes
+          const hasSecurityChanges = files.some(file => 
+            file.filename.includes('security') ||
+            file.filename.includes('auth') ||
+            file.filename.startsWith('backend/app/core/security')
+          );
+          if (hasSecurityChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Performance changes
+          const hasPerformanceChanges = files.some(file => 
+            file.filename.includes('performance') ||
+            file.filename.includes('optimization') ||
+            file.filename.includes('cache')
+          );
+          if (hasPerformanceChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // UI/UX changes
+          const hasUIChanges = files.some(file => 
+            file.filename.includes('ui') ||
+            file.filename.includes('ux') ||
+            file.filename.includes('interface') ||
+            file.filename.includes('design') ||
+            file.filename.includes('layout')
+          );
+          if (hasUIChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Mobile changes
+          const hasMobileChanges = files.some(file => 
+            file.filename.includes('mobile') ||
+            file.filename.includes('app') ||
+            file.filename.includes('ios') ||
+            file.filename.includes('android')
+          );
+          if (hasMobileChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Infrastructure changes
+          const hasInfraChanges = files.some(file => 
+            file.filename.includes('docker') ||
+            file.filename.includes('kubernetes') ||
+            file.filename.includes('terraform') ||
+            file.filename.includes('github') ||
+            file.filename.includes('workflow')
+          );
+          if (hasInfraChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Remove duplicates
+          assignees = [...new Set(assignees)];
+          
+          if (assignees.length > 0) {
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                assignees: assignees,
+              });
+              
+              console.log(`Assignees added: ${assignees.join(', ')}`);
+            } catch (error) {
+              console.log('Failed to add assignees:', error.message);
+            }
+          } else {
+            console.log('No suitable assignees found for this PR');
+          }

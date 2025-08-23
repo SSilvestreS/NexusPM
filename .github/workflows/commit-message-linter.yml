@@ -1,0 +1,16 @@
+name: "Commit Message Linter"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  commit-message-linter:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: wagoid/commitlint-github-action@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}

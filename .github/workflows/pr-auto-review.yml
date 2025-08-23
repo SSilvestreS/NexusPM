@@ -1,0 +1,70 @@
+name: "Pull Request Auto Review"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-review:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          // Auto-approve documentation changes
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          const isDocOnly = files.every(file => 
+            file.filename.endsWith('.md') || 
+            file.filename.startsWith('docs/') ||
+            file.filename.startsWith('.github/') ||
+            file.filename === 'README.md' ||
+            file.filename === 'CONTRIBUTORS.md' ||
+            file.filename === 'LICENSE'
+          );
+          
+          if (isDocOnly && pull.user.login !== 'SSilvestreS') {
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              event: 'APPROVE',
+              body: '✅ **Auto-approved**: Documentation changes only. Thank you for contributing!',
+            });
+          }
+          
+          // Add helpful comments for common issues
+          const hasLargeChanges = files.some(file => file.changes > 100);
+          if (hasLargeChanges) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '⚠️ **Large PR Detected**: This PR contains many changes. Please ensure thorough testing and consider breaking it into smaller, focused PRs if possible.',
+            });
+          }
+          
+          const hasTestChanges = files.some(file => 
+            file.filename.includes('test') || 
+            file.filename.includes('spec') ||
+            file.filename.startsWith('tests/')
+          );
+          
+          if (!hasTestChanges && !isDocOnly) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '🧪 **Testing Reminder**: Consider adding tests for new functionality or changes.',
+            });
+          }

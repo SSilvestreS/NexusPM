@@ -1,0 +1,162 @@
+name: "Pull Request Auto Label"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          let labels = [];
+          
+          // Frontend changes
+          const hasFrontendChanges = files.some(file => file.filename.startsWith('frontend/'));
+          if (hasFrontendChanges) {
+            labels.push('frontend');
+          }
+          
+          // Backend changes
+          const hasBackendChanges = files.some(file => file.filename.startsWith('backend/'));
+          if (hasBackendChanges) {
+            labels.push('backend');
+          }
+          
+          // Documentation changes
+          const hasDocChanges = files.some(file => 
+            file.filename.endsWith('.md') || 
+            file.filename.startsWith('docs/') ||
+            file.filename.startsWith('.github/')
+          );
+          if (hasDocChanges) {
+            labels.push('documentation');
+          }
+          
+          // Test changes
+          const hasTestChanges = files.some(file => 
+            file.filename.includes('test') || 
+            file.filename.includes('spec') ||
+            file.filename.startsWith('tests/')
+          );
+          if (hasTestChanges) {
+            labels.push('tests');
+          }
+          
+          // Configuration changes
+          const hasConfigChanges = files.some(file => 
+            file.filename.endsWith('.yml') || 
+            file.filename.endsWith('.yaml') ||
+            file.filename.endsWith('.json') ||
+            file.filename.endsWith('.toml') ||
+            file.filename.endsWith('.ini') ||
+            file.filename.endsWith('.cfg') ||
+            file.filename.endsWith('.conf')
+          );
+          if (hasConfigChanges) {
+            labels.push('configuration');
+          }
+          
+          // Dependencies changes
+          const hasDependencyChanges = files.some(file => 
+            file.filename === 'package.json' ||
+            file.filename === 'requirements.txt' ||
+            file.filename === 'Pipfile' ||
+            file.filename === 'poetry.lock' ||
+            file.filename === 'yarn.lock' ||
+            file.filename === 'package-lock.json'
+          );
+          if (hasDependencyChanges) {
+            labels.push('dependencies');
+          }
+          
+          // Security changes
+          const hasSecurityChanges = files.some(file => 
+            file.filename.includes('security') ||
+            file.filename.includes('auth') ||
+            file.filename.startsWith('backend/app/core/security')
+          );
+          if (hasSecurityChanges) {
+            labels.push('security');
+          }
+          
+          // Performance changes
+          const hasPerformanceChanges = files.some(file => 
+            file.filename.includes('performance') ||
+            file.filename.includes('optimization') ||
+            file.filename.includes('cache')
+          );
+          if (hasPerformanceChanges) {
+            labels.push('performance');
+          }
+          
+          // UI/UX changes
+          const hasUIChanges = files.some(file => 
+            file.filename.includes('ui') ||
+            file.filename.includes('ux') ||
+            file.filename.includes('interface') ||
+            file.filename.includes('design') ||
+            file.filename.includes('layout')
+          );
+          if (hasUIChanges) {
+            labels.push('ui');
+          }
+          
+          // Mobile changes
+          const hasMobileChanges = files.some(file => 
+            file.filename.includes('mobile') ||
+            file.filename.includes('app') ||
+            file.filename.includes('ios') ||
+            file.filename.includes('android')
+          );
+          if (hasMobileChanges) {
+            labels.push('mobile');
+          }
+          
+          // Remove duplicates
+          labels = [...new Set(labels)];
+          
+          if (labels.length > 0) {
+            // Remove existing labels first
+            const { data: existingLabels } = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const existingLabelNames = existingLabels.map(label => label.name);
+            const labelsToRemove = existingLabelNames.filter(name => 
+              ['frontend', 'backend', 'documentation', 'tests', 'configuration', 'dependencies', 'security', 'performance', 'ui', 'mobile'].includes(name)
+            );
+            
+            for (const labelName of labelsToRemove) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: labelName,
+              });
+            }
+            
+            // Add new labels
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: labels,
+            });
+          }

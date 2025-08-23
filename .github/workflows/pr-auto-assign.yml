@@ -1,0 +1,61 @@
+name: "Pull Request Auto Assign"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          // Auto-assign based on file changes
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          let assignees = [];
+          
+          // Check if changes are in frontend
+          const hasFrontendChanges = files.some(file => file.filename.startsWith('frontend/'));
+          if (hasFrontendChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Check if changes are in backend
+          const hasBackendChanges = files.some(file => file.filename.startsWith('backend/'));
+          if (hasBackendChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Check if changes are in documentation
+          const hasDocChanges = files.some(file => 
+            file.filename.endsWith('.md') || 
+            file.filename.startsWith('docs/') ||
+            file.filename.startsWith('.github/')
+          );
+          if (hasDocChanges) {
+            assignees.push('SSilvestreS');
+          }
+          
+          // Remove duplicates
+          assignees = [...new Set(assignees)];
+          
+          if (assignees.length > 0) {
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: assignees,
+            });
+          }

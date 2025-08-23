@@ -1,0 +1,105 @@
+# Bug reports
+bug:
+  - '**/*bug*'
+  - '**/*error*'
+  - '**/*fail*'
+  - '**/*broken*'
+  - '**/*issue*'
+
+# Feature requests
+enhancement:
+  - '**/*feature*'
+  - '**/*enhancement*'
+  - '**/*improvement*'
+  - '**/*request*'
+  - '**/*suggestion*'
+
+# Documentation
+documentation:
+  - '**/*doc*'
+  - '**/*readme*'
+  - '**/*guide*'
+  - '**/*tutorial*'
+  - '**/*help*'
+
+# Good first issues
+'good first issue':
+  - '**/*beginner*'
+  - '**/*easy*'
+  - '**/*simple*'
+  - '**/*first*'
+
+# Help wanted
+'help wanted':
+  - '**/*help*'
+  - '**/*assistance*'
+  - '**/*support*'
+
+# Question
+question:
+  - '**/*question*'
+  - '**/*ask*'
+  - '**/*how*'
+  - '**/*what*'
+  - '**/*why*'
+
+# Duplicate
+duplicate:
+  - '**/*duplicate*'
+  - '**/*same*'
+  - '**/*similar*'
+
+# Invalid
+invalid:
+  - '**/*invalid*'
+  - '**/*wrong*'
+  - '**/*incorrect*'
+
+# Won't fix
+wontfix:
+  - '**/*wontfix*'
+  - '**/*wont*'
+  - '**/*never*'
+
+# Security
+security:
+  - '**/*security*'
+  - '**/*vulnerability*'
+  - '**/*exploit*'
+  - '**/*hack*'
+
+# Performance
+performance:
+  - '**/*performance*'
+  - '**/*slow*'
+  - '**/*fast*'
+  - '**/*optimization*'
+
+# UI/UX
+ui:
+  - '**/*ui*'
+  - '**/*ux*'
+  - '**/*interface*'
+  - '**/*design*'
+  - '**/*layout*'
+
+# Mobile
+mobile:
+  - '**/*mobile*'
+  - '**/*app*'
+  - '**/*ios*'
+  - '**/*android*'
+
+# Backend
+backend:
+  - '**/*api*'
+  - '**/*server*'
+  - '**/*database*'
+  - '**/*backend*'
+
+# Frontend
+frontend:
+  - '**/*frontend*'
+  - '**/*client*'
+  - '**/*browser*'
+  - '**/*web*'

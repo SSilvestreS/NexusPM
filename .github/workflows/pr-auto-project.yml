@@ -1,0 +1,168 @@
+name: "Pull Request Auto Project"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-project:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pull } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          // Get available projects
+          const { data: projects } = await github.rest.projects.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+          });
+          
+          if (projects.length === 0) {
+            console.log('No projects found');
+            return;
+          }
+          
+          // Find the most appropriate project based on PR content
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          let bestProject = null;
+          let bestScore = 0;
+          
+          for (const project of projects) {
+            let score = 0;
+            const projectName = project.name.toLowerCase();
+            const projectBody = (project.body || '').toLowerCase();
+            
+            // Frontend project
+            if (projectName.includes('frontend') || projectName.includes('ui') || projectName.includes('ux')) {
+              const hasFrontendChanges = files.some(file => file.filename.startsWith('frontend/'));
+              if (hasFrontendChanges) {
+                score += 5;
+              }
+            }
+            
+            // Backend project
+            if (projectName.includes('backend') || projectName.includes('api') || projectName.includes('server')) {
+              const hasBackendChanges = files.some(file => file.filename.startsWith('backend/'));
+              if (hasBackendChanges) {
+                score += 5;
+              }
+            }
+            
+            // Documentation project
+            if (projectName.includes('documentation') || projectName.includes('docs') || projectName.includes('guide')) {
+              const hasDocChanges = files.some(file => 
+                file.filename.endsWith('.md') || 
+                file.filename.startsWith('docs/') ||
+                file.filename.startsWith('.github/')
+              );
+              if (hasDocChanges) {
+                score += 5;
+              }
+            }
+            
+            // Testing project
+            if (projectName.includes('testing') || projectName.includes('test') || projectName.includes('qa')) {
+              const hasTestChanges = files.some(file => 
+                file.filename.includes('test') || 
+                file.filename.includes('spec') ||
+                file.filename.startsWith('tests/')
+              );
+              if (hasTestChanges) {
+                score += 4;
+              }
+            }
+            
+            // Security project
+            if (projectName.includes('security') || projectName.includes('auth') || projectName.includes('vulnerability')) {
+              const hasSecurityChanges = files.some(file => 
+                file.filename.includes('security') ||
+                file.filename.includes('auth') ||
+                file.filename.startsWith('backend/app/core/security')
+              );
+              if (hasSecurityChanges) {
+                score += 4;
+              }
+            }
+            
+            // Performance project
+            if (projectName.includes('performance') || projectName.includes('optimization') || projectName.includes('speed')) {
+              const hasPerformanceChanges = files.some(file => 
+                file.filename.includes('performance') ||
+                file.filename.includes('optimization') ||
+                file.filename.includes('cache')
+              );
+              if (hasPerformanceChanges) {
+                score += 3;
+              }
+            }
+            
+            // Mobile project
+            if (projectName.includes('mobile') || projectName.includes('app') || projectName.includes('ios') || projectName.includes('android')) {
+              const hasMobileChanges = files.some(file => 
+                file.filename.includes('mobile') ||
+                file.filename.includes('app') ||
+                file.filename.includes('ios') ||
+                file.filename.includes('android')
+              );
+              if (hasMobileChanges) {
+                score += 3;
+              }
+            }
+            
+            // Infrastructure project
+            if (projectName.includes('infrastructure') || projectName.includes('devops') || projectName.includes('deploy')) {
+              const hasInfraChanges = files.some(file => 
+                file.filename.includes('docker') ||
+                file.filename.includes('kubernetes') ||
+                file.filename.includes('terraform') ||
+                file.filename.includes('github') ||
+                file.filename.includes('workflow')
+              );
+              if (hasInfraChanges) {
+                score += 3;
+              }
+            }
+            
+            if (score > bestScore) {
+              bestScore = score;
+              bestProject = project;
+            }
+          }
+          
+          // Only assign to project if we have a good match
+          if (bestProject && bestScore >= 3) {
+            try {
+              // Get project columns
+              const { data: columns } = await github.rest.projects.listColumns({
+                project_id: bestProject.id,
+              });
+              
+              if (columns.length > 0) {
+                // Add PR to the first column (usually "To Do" or "In Progress")
+                const firstColumn = columns[0];
+                
+                await github.rest.projects.createCard({
+                  column_id: firstColumn.id,
+                  content_id: context.issue.id,
+                  content_type: 'PullRequest',
+                });
+                
+                console.log(`PR added to project "${bestProject.name}" in column "${firstColumn.name}"`);
+              }
+            } catch (error) {
+              console.log('Failed to add PR to project:', error.message);
+            }
+          } else {
+            console.log('No suitable project found for this PR');
+          }
