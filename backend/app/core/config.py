@@ -1,119 +1,197 @@
 """
-Configuration settings for Nova Pasta application
+Configurações da aplicação
 """
-
-from pydantic_settings import BaseSettings
-from typing import List, Optional
+from typing import Optional, List, Dict, Any
+from pydantic import BaseSettings, validator
 import os
 
+
 class Settings(BaseSettings):
-    """Application settings"""
+    """Configurações da aplicação"""
     
-    # Application
-    APP_NAME: str = "Nova Pasta"
-    VERSION: str = "1.0.0"
-    DEBUG: bool = False
-    ENVIRONMENT: str = "development"
+    # Configurações básicas da aplicação
+    app_name: str = "NexusPM"
+    app_version: str = "1.0.0"
+    app_description: str = "Sistema de Gerenciamento de Projetos Colaborativos"
+    debug: bool = False
+    environment: str = "development"
     
-    # Security
-    SECRET_KEY: str = "nova_pasta_secret_key_change_in_production"
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    # Configurações de segurança
+    secret_key: str = "your-secret-key-here"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+    refresh_token_expire_days: int = 7
     
-    # Database
-    DATABASE_URL: str = "postgresql://nova_user:nova_password@localhost:5432/nova_pasta"
-    POSTGRES_DB: str = "nova_pasta"
-    POSTGRES_USER: str = "nova_user"
-    POSTGRES_PASSWORD: str = "nova_password"
+    # Configurações do banco de dados
+    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/nexuspm"
+    database_host: str = "localhost"
+    database_port: int = 5432
+    database_name: str = "nexuspm"
+    database_user: str = "postgres"
+    database_password: str = "postgres"
     
-    # Redis
-    REDIS_URL: str = "redis://:nova_redis_password@localhost:6379/0"
-    REDIS_PASSWORD: str = "nova_redis_password"
+    # Configurações do Redis
+    redis_url: str = "redis://localhost:6379"
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+    redis_db: int = 0
+    redis_password: Optional[str] = None
     
-    # RabbitMQ
-    RABBITMQ_URL: str = "amqp://nova_user:nova_password@localhost:5672/nova_pasta"
-    CELERY_BROKER_URL: str = "amqp://nova_user:nova_password@localhost:5672/nova_pasta"
-    CELERY_RESULT_BACKEND: str = "redis://:nova_redis_password@localhost:6379/0"
+    # Configurações do RabbitMQ
+    rabbitmq_url: str = "amqp://guest:guest@localhost:5672/"
+    rabbitmq_host: str = "localhost"
+    rabbitmq_port: int = 5672
+    rabbitmq_user: str = "guest"
+    rabbitmq_password: str = "guest"
+    rabbitmq_vhost: str = "/"
     
-    # OAuth2
-    GITHUB_CLIENT_ID: Optional[str] = None
-    GITHUB_CLIENT_SECRET: Optional[str] = None
-    GITLAB_CLIENT_ID: Optional[str] = None
-    GITLAB_CLIENT_SECRET: Optional[str] = None
+    # Configurações de CORS
+    cors_origins: List[str] = ["http://localhost:3000", "http://localhost:8080"]
+    cors_allow_credentials: bool = True
+    cors_allow_methods: List[str] = ["*"]
+    cors_allow_headers: List[str] = ["*"]
     
-    # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080"]
-    ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1"]
+    # Configurações de hosts permitidos
+    allowed_hosts: List[str] = ["localhost", "127.0.0.1"]
     
-    # Email
-    SMTP_HOST: str = "smtp.gmail.com"
-    SMTP_PORT: int = 587
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
+    # Configurações de email
+    smtp_host: Optional[str] = None
+    smtp_port: int = 587
+    smtp_user: Optional[str] = None
+    smtp_password: Optional[str] = None
+    smtp_tls: bool = True
+    smtp_ssl: bool = False
     
-    # File Storage
-    STORAGE_TYPE: str = "local"  # local, s3, azure
-    STORAGE_PATH: str = "./uploads"
-    AWS_ACCESS_KEY_ID: Optional[str] = None
-    AWS_SECRET_ACCESS_KEY: Optional[str] = None
-    AWS_REGION: str = "us-east-1"
-    AWS_BUCKET_NAME: str = "nova-pasta-uploads"
+    # Configurações de armazenamento de arquivos
+    file_storage_backend: str = "local"  # local, s3, azure
+    file_storage_path: str = "uploads"
+    max_file_size: int = 10 * 1024 * 1024  # 10MB
+    allowed_file_types: List[str] = ["jpg", "jpeg", "png", "gif", "pdf", "doc", "docx", "xls", "xlsx", "txt"]
     
-    # Logging
-    LOG_LEVEL: str = "INFO"
-    LOG_FORMAT: str = "json"
+    # Configurações de logging
+    log_level: str = "INFO"
+    log_format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     
-    # WebSocket
-    WS_MESSAGE_QUEUE_SIZE: int = 100
+    # Configurações de WebSocket
+    websocket_ping_interval: int = 20
+    websocket_ping_timeout: int = 20
     
-    # Pagination
-    DEFAULT_PAGE_SIZE: int = 20
-    MAX_PAGE_SIZE: int = 100
+    # Configurações de paginação
+    default_page_size: int = 20
+    max_page_size: int = 100
     
-    # Search
-    ELASTICSEARCH_URL: str = "http://localhost:9200"
-    SEARCH_INDEX_PREFIX: str = "nova_pasta"
+    # Configurações de busca
+    search_index_path: str = "search_index"
+    search_max_results: int = 1000
     
-    # Cache
-    CACHE_TTL: int = 300  # 5 minutes
-    USER_CACHE_TTL: int = 3600  # 1 hour
+    # Configurações de cache
+    cache_ttl: int = 3600  # 1 hora
+    cache_max_size: int = 1000
     
-    # Rate Limiting
-    RATE_LIMIT_PER_MINUTE: int = 100
-    RATE_LIMIT_PER_HOUR: int = 1000
+    # Configurações de rate limiting
+    rate_limit_requests: int = 100
+    rate_limit_window: int = 3600  # 1 hora
     
-    # File Upload
-    MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 10MB
-    ALLOWED_FILE_TYPES: List[str] = [
-        "image/jpeg", "image/png", "image/gif", "image/webp",
-        "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "text/plain", "text/csv", "application/json"
-    ]
+    # Configurações de upload
+    upload_chunk_size: int = 1024 * 1024  # 1MB
+    upload_max_concurrent: int = 5
     
-    # Operational Transformation
-    OT_HISTORY_SIZE: int = 100
-    OT_SYNC_INTERVAL: int = 100  # milliseconds
+    # Configurações de operational transformation
+    ot_max_operations: int = 1000
+    ot_cleanup_interval: int = 3600  # 1 hora
     
-    # Notifications
-    NOTIFICATION_RETENTION_DAYS: int = 30
-    PUSH_NOTIFICATION_ENABLED: bool = True
+    # Configurações de notificações
+    notification_batch_size: int = 100
+    notification_retry_attempts: int = 3
+    notification_retry_delay: int = 300  # 5 minutos
     
-    # Monitoring
-    METRICS_ENABLED: bool = True
-    HEALTH_CHECK_INTERVAL: int = 30
+    # Configurações de monitoramento
+    enable_metrics: bool = True
+    metrics_port: int = 8001
+    health_check_interval: int = 30
+    
+    # Configurações de GraphQL
+    enable_graphql: bool = True
+    graphql_path: str = "/graphql"
+    
+    # Configurações de internacionalização
+    default_language: str = "pt-BR"
+    supported_languages: List[str] = ["pt-BR", "en-US", "es-ES"]
+    
+    # Configurações de tema
+    default_theme: str = "light"
+    available_themes: List[str] = ["light", "dark", "auto"]
+    
+    # Configurações de modo offline
+    enable_offline_mode: bool = True
+    offline_sync_interval: int = 300  # 5 minutos
+    
+    # Configurações de plugins
+    enable_plugins: bool = True
+    plugins_directory: str = "plugins"
+    
+    # Configurações de virtual scrolling
+    virtual_scroll_page_size: int = 50
+    virtual_scroll_buffer_size: int = 100
+    
+    # Configurações de integração externa
+    github_webhook_secret: Optional[str] = None
+    gitlab_webhook_secret: Optional[str] = None
+    
+    # Configurações de OAuth2
+    oauth2_providers: Dict[str, Dict[str, str]] = {
+        "github": {
+            "client_id": "",
+            "client_secret": "",
+            "authorize_url": "https://github.com/login/oauth/authorize",
+            "token_url": "https://github.com/login/oauth/access_token",
+            "userinfo_url": "https://api.github.com/user"
+        },
+        "gitlab": {
+            "client_id": "",
+            "client_secret": "",
+            "authorize_url": "https://gitlab.com/oauth/authorize",
+            "token_url": "https://gitlab.com/oauth/token",
+            "userinfo_url": "https://gitlab.com/api/v4/user"
+        }
+    }
+    
+    @validator('secret_key')
+    def validate_secret_key(cls, v):
+        """Valida se a chave secreta foi definida em produção"""
+        if os.getenv('ENVIRONMENT') == 'production' and v == "your-secret-key-here":
+            raise ValueError("SECRET_KEY deve ser definida em produção")
+        return v
+    
+    @validator('smtp_host', 'smtp_user', 'smtp_password')
+    def validate_smtp_settings(cls, v, values):
+        """Valida se as configurações SMTP estão completas"""
+        if any([values.get('smtp_host'), values.get('smtp_user'), values.get('smtp_password')]):
+            if not all([values.get('smtp_host'), values.get('smtp_user'), values.get('smtp_password')]):
+                raise ValueError("Todas as configurações SMTP devem ser fornecidas")
+        return v
+    
+    @property
+    def database_url(self) -> str:
+        """Constrói a URL do banco de dados"""
+        return f"postgresql+asyncpg://{self.database_user}:{self.database_password}@{self.database_host}:{self.database_port}/{self.database_name}"
+    
+    @property
+    def redis_url(self) -> str:
+        """Constrói a URL do Redis"""
+        if self.redis_password:
+            return f"redis://:{self.redis_password}@{self.redis_host}:{self.redis_port}/{self.redis_db}"
+        return f"redis://{self.redis_host}:{self.redis_port}/{self.redis_db}"
+    
+    @property
+    def rabbitmq_url(self) -> str:
+        """Constrói a URL do RabbitMQ"""
+        return f"amqp://{self.rabbitmq_user}:{self.rabbitmq_password}@{self.rabbitmq_host}:{self.rabbitmq_port}/{self.rabbitmq_vhost}"
     
     class Config:
         env_file = ".env"
-        case_sensitive = True
+        case_sensitive = False
 
-# Create settings instance
+
+# Instância global das configurações
 settings = Settings()
-
-# Validate required settings in production
-if settings.ENVIRONMENT == "production":
-    if not settings.SECRET_KEY or settings.SECRET_KEY == "nova_pasta_secret_key_change_in_production":
-        raise ValueError("SECRET_KEY must be set in production")
-    
-    if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        raise ValueError("SMTP credentials must be set in production")

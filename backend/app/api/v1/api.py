@@ -1,59 +1,63 @@
 """
-Roteador principal da API v1
+API Router principal para versão 1
 """
-
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import auth, users, projects, tasks, comments, notifications, search, websockets
+from app.api.v1.endpoints import auth, users, projects, tasks, comments, notifications, search, websockets, files
 
-# Cria o roteador principal da API
 api_router = APIRouter()
 
-# Inclui os roteadores de cada módulo
+# Incluir routers dos endpoints
 api_router.include_router(
     auth.router,
     prefix="/auth",
-    tags=["Autenticação"]
+    tags=["autenticação"]
 )
 
 api_router.include_router(
     users.router,
     prefix="/users",
-    tags=["Usuários"]
+    tags=["usuários"]
 )
 
 api_router.include_router(
     projects.router,
     prefix="/projects",
-    tags=["Projetos"]
+    tags=["projetos"]
 )
 
 api_router.include_router(
     tasks.router,
     prefix="/tasks",
-    tags=["Tarefas"]
+    tags=["tarefas"]
 )
 
 api_router.include_router(
     comments.router,
     prefix="/comments",
-    tags=["Comentários"]
+    tags=["comentários"]
 )
 
 api_router.include_router(
     notifications.router,
     prefix="/notifications",
-    tags=["Notificações"]
+    tags=["notificações"]
 )
 
 api_router.include_router(
     search.router,
     prefix="/search",
-    tags=["Busca"]
+    tags=["busca"]
 )
 
 api_router.include_router(
     websockets.router,
     prefix="/ws",
-    tags=["WebSockets"]
+    tags=["websockets"]
+)
+
+api_router.include_router(
+    files.router,
+    prefix="/files",
+    tags=["arquivos"]
 )
