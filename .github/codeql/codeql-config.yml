@@ -2,32 +2,20 @@ name: "CodeQL Config"
 
 queries:
   - uses: security-and-quality
-  - uses: security-and-quality@v2
-  - uses: security-and-quality@v3
 
 paths:
   - frontend/src
   - backend/app
 
 paths-ignore:
-  - '**/*.test.js'
   - '**/*.test.ts'
-  - '**/*.test.jsx'
   - '**/*.test.tsx'
-  - '**/*.spec.js'
   - '**/*.spec.ts'
-  - '**/*.spec.jsx'
   - '**/*.spec.tsx'
+  - '**/tests/**'
   - '**/node_modules/**'
+  - '**/.git/**'
+  - '**/dist/**'
+  - '**/build/**'
   - '**/__pycache__/**'
   - '**/*.pyc'
-  - '**/venv/**'
-  - '**/.venv/**'
-  - '**/env/**'
-  - '**/.env/**'
-
-query-filters:
-  - include:
-      tags contain: security
-  - exclude:
-      tags contain: experimental
