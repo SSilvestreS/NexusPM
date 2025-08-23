@@ -519,35 +519,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 - **Backend:** 1000+ requests/segundo
 - **Frontend:** Time to Interactive < 3s
 - **Database:** Query response < 100ms
-- **Cache:** Hit ratio > 90%
-
-## 🌟 **Roadmap**
-
-### **Versão 1.1.0 (Q1 2024)**
-- [ ] Sistema de relatórios avançados
-- [ ] Integração com calendário
-- [ ] Chat interno integrado
-- [ ] Sistema de arquivos e anexos
-
-### **Versão 1.2.0 (Q2 2024)**
-- [ ] API GraphQL
-- [ ] Sistema de plugins
-- [ ] Modo offline
-- [ ] Virtual scrolling
-
-### **Versão 2.0.0 (Q3 2024)**
-- [ ] Aplicativo móvel nativo
-- [ ] Integração com Slack/Teams
-- [ ] Sistema de timesheet
-- [ ] Dashboard executivo
-
-## 📞 **Suporte e Contato**
-
-### **Canais de Suporte**
-
-- **Issues:** [GitHub Issues](https://github.com/SSilvestreS/NexusPM/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/SSilvestreS/NexusPM/discussions)
-- **Wiki:** [Documentação Wiki](https://github.com/SSilvestreS/NexusPM/wiki)
+- **Cache:** Hit ratio > 90%]
 
 ### **Equipe de Desenvolvimento**
 
@@ -581,14 +553,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-## 🙏 **Agradecimentos**
-
-- **FastAPI** - Framework web incrível
-- **React** - Biblioteca de UI revolucionária
-- **Tailwind CSS** - Framework CSS utilitário
-- **Docker** - Containerização que simplifica tudo
-- **GitHub** - Plataforma que torna o desenvolvimento colaborativo possível
 
 ---
 
