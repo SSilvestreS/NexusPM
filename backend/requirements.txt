@@ -10,7 +10,7 @@ asyncpg==0.29.0
 alembic==1.13.1
 
 # Cache e sessões
-redis==5.0.1
+redis==6.4.0
 celery==5.3.4
 
 # Autenticação
