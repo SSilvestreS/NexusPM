@@ -20,7 +20,7 @@ python-multipart==0.0.6
 
 # Utilitários
 python-dotenv==1.0.0
-httpx==0.25.2
+httpx==0.28.1
 
 # Testes
 pytest==7.4.3
