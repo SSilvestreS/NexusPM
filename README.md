@@ -234,11 +234,7 @@ O projeto utiliza múltiplas estratégias de CI/CD:
 - [ ] Upload de arquivos grandes pode falhar
 - [ ] Interface mobile precisa de otimizações
 
-## 📞 Suporte
 
-- **Email**: suporte@nexuspm.com
-- **Discord**: [NexusPM Community](https://discord.gg/nexuspm)
-- **Issues**: [GitHub Issues](https://github.com/SSilvestreS/NexusPM/issues)
 
 ## 📄 Licença
 
