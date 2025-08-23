@@ -1,4 +1,4 @@
-# Nova Pasta - Sistema de Gerenciamento de Projetos
+# NexusPM - Sistema de Gerenciamento de Projetos
 
 Sistema completo de gerenciamento de projetos colaborativos em tempo real, similar ao Jira/Asana.
 
