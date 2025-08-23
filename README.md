@@ -1,7 +1,7 @@
 # 🚀 NexusPM - Sistema de Gerenciamento de Projetos Colaborativos
 
-[![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-orange)](https://github.com/SSilvestreS/NexusPM)
-[![Versão](https://img.shields.io/badge/Versão-1.0.0-blue)](https://github.com/SSilvestreS/NexusPM/releases)
+[![Status](https://img.shields.io/badge/Status-Completo-green)](https://github.com/SSilvestreS/NexusPM)
+[![Versão](https://img.shields.io/badge/Versão-3.0.0-blue)](https://github.com/SSilvestreS/NexusPM/releases)
 [![Licença](https://img.shields.io/badge/Licença-MIT-green)](https://github.com/SSilvestreS/NexusPM/blob/master/LICENSE)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com/SSilvestreS/NexusPM/actions)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://hub.docker.com/)
