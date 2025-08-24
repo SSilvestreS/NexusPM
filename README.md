@@ -524,22 +524,22 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 ##  **Roadmap**
 
 ### **Versão 1.1.0 (Q1 2024)**
-- [ ] Sistema de relatórios avançados
-- [ ] Integração com calendário
-- [ ] Chat interno integrado
-- [ ] Sistema de arquivos e anexos
+- [x] Sistema de relatórios avançados
+- [x] Integração com calendário
+- [x] Chat interno integrado
+- [x] Sistema de arquivos e anexos
 
 ### **Versão 1.2.0 (Q2 2024)**
-- [ ] API GraphQL
-- [ ] Sistema de plugins
-- [ ] Modo offline
-- [ ] Virtual scrolling
+- [x] API GraphQL
+- [x] Sistema de plugins
+- [x] Modo offline
+- [x] Virtual scrolling
 
 ### **Versão 2.0.0 (Q3 2024)**
-- [ ] Aplicativo móvel nativo
-- [ ] Integração com Slack/Teams
-- [ ] Sistema de timesheet
-- [ ] Dashboard executivo
+- [x] Aplicativo móvel nativo
+- [x] Integração com Slack/Teams
+- [x] Sistema de timesheet
+- [x] Dashboard executivo
 
 ##  **Suporte e Contato**
 
