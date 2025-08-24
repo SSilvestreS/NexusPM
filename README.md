@@ -1,4 +1,4 @@
-# 🚀 NexusPM - Sistema de Gerenciamento de Projetos Colaborativos
+#  NexusPM - Sistema de Gerenciamento de Projetos Colaborativos
 
 [![Status](https://img.shields.io/badge/Status-Completo-green)](https://github.com/SSilvestreS/NexusPM)
 [![Versão](https://img.shields.io/badge/Versão-3.0.0-blue)](https://github.com/SSilvestreS/NexusPM/releases)
@@ -6,40 +6,40 @@
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com/SSilvestreS/NexusPM/actions)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://hub.docker.com/)
 
-## 🎯 **Visão Geral**
+##  **Visão Geral**
 
 O **NexusPM** é um sistema completo de gerenciamento de projetos colaborativos em tempo real, desenvolvido para equipes que precisam organizar, acompanhar e colaborar em projetos de forma eficiente. Inspirado em ferramentas como Jira e Asana, oferece uma solução moderna e robusta para gestão de projetos.
 
-### 🎯 **Características Principais**
+###  **Características Principais**
 
-- 🔐 **Autenticação JWT** com OAuth2.0 (GitHub/GitLab)
-- ⚡ **Dashboard em Tempo Real** com WebSockets
-- 📊 **Sistema Completo de CRUD** para projetos com versionamento
-- 👥 **Editor Colaborativo** com operational transformation
-- 💬 **Sistema de Comentários** com mentions e notificações
-- 🔗 **Integrações Externas** (GitHub/GitLab via webhooks)
-- 📈 **Relatórios Avançados** com exportação PDF/Excel
-- 🌍 **Internacionalização (i18n)** e temas claro/escuro
-- 📱 **Interface Responsiva** para todos os dispositivos
+-  **Autenticação JWT** com OAuth2.0 (GitHub/GitLab)
+-  **Dashboard em Tempo Real** com WebSockets
+-  **Sistema Completo de CRUD** para projetos com versionamento
+-  **Editor Colaborativo** com operational transformation
+-  **Sistema de Comentários** com mentions e notificações
+-  **Integrações Externas** (GitHub/GitLab via webhooks)
+-  **Relatórios Avançados** com exportação PDF/Excel
+-  **Internacionalização (i18n)** e temas claro/escuro
+-  **Interface Responsiva** para todos os dispositivos
 
-## 🏗️ **Arquitetura do Sistema**
+##  **Arquitetura do Sistema**
 
 ```
 NexusPM/
-├── 📁 frontend/           # Aplicação React/TypeScript
-│   ├── 🚀 src/           # Código fonte do frontend
-│   ├── 📁 public/        # Arquivos estáticos
-│   └── 📦 package.json   # Dependências do frontend
-├── 🐍 backend/           # API Python/FastAPI
-│   ├── 📁 app/          # Código fonte da API
-│   ├── 📁 alembic/      # Migrações de banco
-│   └── 📋 requirements.txt # Dependências Python
-├── 📁 .github/          # Workflows e configurações
-├── 📁 docs/             # Documentação técnica
-└── 🐳 docker-compose.yml # Orquestração de serviços
+├──  frontend/           # Aplicação React/TypeScript
+│   ├──  src/           # Código fonte do frontend
+│   ├──  public/        # Arquivos estáticos
+│   └──  package.json   # Dependências do frontend
+├──  backend/           # API Python/FastAPI
+│   ├──  app/          # Código fonte da API
+│   ├──  alembic/      # Migrações de banco
+│   └──  requirements.txt # Dependências Python
+├──  .github/          # Workflows e configurações
+├──  docs/             # Documentação técnica
+└──  docker-compose.yml # Orquestração de serviços
 ```
 
-## 🚀 **Stack Tecnológica**
+##  **Stack Tecnológica**
 
 ### **Backend**
 - **Python 3.11** - Linguagem principal
@@ -68,7 +68,7 @@ NexusPM/
 - **CodeQL** - Análise estática de segurança
 - **Nginx** - Servidor web e proxy reverso
 
-## 📋 **Pré-requisitos**
+##  **Pré-requisitos**
 
 ### **Sistema Operacional**
 - **Windows 10/11** (recomendado)
@@ -88,7 +88,7 @@ NexusPM/
 - **Disco:** 20GB de espaço livre
 - **Rede:** Conexão estável com internet
 
-## 🚀 **Instalação e Configuração**
+##  **Instalação e Configuração**
 
 ### **1. Clone do Repositório**
 
@@ -158,7 +158,7 @@ Após a inicialização, verifique se todos os serviços estão funcionando:
 - **Redis:** localhost:6379
 - **RabbitMQ Management:** http://localhost:15672
 
-## 🛠️ **Desenvolvimento Local**
+##  **Desenvolvimento Local**
 
 ### **Backend (Python/FastAPI)**
 
@@ -207,7 +207,7 @@ npm run type-check
 npm run lint
 ```
 
-## 🧪 **Testes**
+##  **Testes**
 
 ### **Backend (Python)**
 
@@ -245,7 +245,7 @@ npm run test -- --ui
 npm run type-check
 ```
 
-## 🚀 **Deploy em Produção**
+##  **Deploy em Produção**
 
 ### **1. Preparação do Ambiente**
 
@@ -289,7 +289,7 @@ docker push $AWS_ACCOUNT.dkr.ecr.us-east-1.amazonaws.com/nova-pasta-backend:late
 az acr build --registry $ACR_NAME --image nova-pasta-backend:latest .
 ```
 
-## 📚 **Documentação da API**
+##  **Documentação da API**
 
 ### **Swagger/OpenAPI**
 - **URL:** http://localhost:8000/docs
@@ -362,7 +362,7 @@ celery -A app.core.celery_app beat --loglevel=info
 celery -A app.core.celery_app flower --port=5555
 ```
 
-## 🚨 **Troubleshooting**
+##  **Troubleshooting**
 
 ### **Problemas Comuns**
 
@@ -406,7 +406,7 @@ npm cache clean --force
 docker builder prune
 ```
 
-## 🤝 **Contribuição**
+##  **Contribuição**
 
 ### **Como Contribuir**
 
@@ -450,7 +450,7 @@ test: adição de testes
 chore: tarefas de manutenção
 ```
 
-## 📊 **Monitoramento e Logs**
+##  **Monitoramento e Logs**
 
 ### **Logs da Aplicação**
 
@@ -473,7 +473,7 @@ docker-compose logs -f
 - **Redis:** Verificação automática no docker-compose
 - **RabbitMQ:** Verificação automática no docker-compose
 
-## 🔒 **Segurança**
+##  **Segurança**
 
 ### **Boas Práticas**
 
@@ -501,7 +501,7 @@ JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 ```
 
-## 📈 **Performance e Escalabilidade**
+##  **Performance e Escalabilidade**
 
 ### **Otimizações Recomendadas**
 
@@ -521,7 +521,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 - **Database:** Query response < 100ms
 - **Cache:** Hit ratio > 90%
 
-## 🌟 **Roadmap**
+##  **Roadmap**
 
 ### **Versão 1.1.0 (Q1 2024)**
 - [ ] Sistema de relatórios avançados
@@ -541,7 +541,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 - [ ] Sistema de timesheet
 - [ ] Dashboard executivo
 
-## 📞 **Suporte e Contato**
+##  **Suporte e Contato**
 
 ### **Canais de Suporte**
 
@@ -554,7 +554,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 - **Desenvolvedor Principal:** [SSilvestreS](https://github.com/SSilvestreS)
 - **Contribuidores:** Veja [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
-## 📄 **Licença**
+##  **Licença**
 
 Este projeto está licenciado sob a **Licença MIT** - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
@@ -582,20 +582,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## 🙏 **Agradecimentos**
-
-- **FastAPI** - Framework web incrível
-- **React** - Biblioteca de UI revolucionária
-- **Tailwind CSS** - Framework CSS utilitário
-- **Docker** - Containerização que simplifica tudo
-- **GitHub** - Plataforma que torna o desenvolvimento colaborativo possível
-
 ---
 
 <div align="center">
 
 **⭐ Se este projeto te ajudou, considere dar uma estrela no GitHub! ⭐**
 
-**🚀 NexusPM - Transformando a gestão de projetos colaborativos 🚀**
 
 </div>
